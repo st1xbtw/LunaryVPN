@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Lunary VPN - Главная{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h1 class="glitch" data-text="🌙 Lunary VPN">🌙 Lunary VPN</h1>
+        <p class="hero-subtitle">Молниеносная скорость. Абсолютная конфиденциальность.</p>
+        <p class="hero-description">Подключение за 1 минуту! Безлимитный трафик. Все серверы мира.</p>
+        <div class="hero-buttons">
+            <a href="{{ url_for('register') }}" class="btn-glow">Начать бесплатно</a>
+            <a href="{{ url_for('about') }}" class="btn-outline">Узнать больше</a>
+        </div>
+    </div>
+    <div class="hero-stats">
+        <div class="stat-card glass-card">
+            <div class="stat-number">∞</div>
+            <div class="stat-label">Безлимитный трафик</div>
+        </div>
+        <div class="stat-card glass-card">
+            <div class="stat-number">9+</div>
+            <div class="stat-label">Серверов</div>
+        </div>
+        <div class="stat-card glass-card">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Поддержка</div>
+        </div>
+    </div>
+</section>
+
+<section class="tariffs-section">
+    <h2 class="section-title glitch-text">💎 Выберите тариф</h2>
+    <div class="tariffs-grid">
+        {% for key, tariff in tariffs.items() %}
+        <div class="tariff-card glass-card {% if tariff.popular %}popular{% endif %}">
+            {% if tariff.popular %}
+            <div class="popular-badge">🔥 Популярный</div>
+            {% endif %}
+            {% if tariff.discount %}
+            <div class="discount-badge">💰 Экономия {{ tariff.discount }}</div>
+            {% endif %}
+            
+            <h3 class="tariff-name">{{ tariff.name }}</h3>
+            <div class="tariff-price">
+                {% if tariff.price == 0 %}
+                <span class="price-free">Бесплатно</span>
+                {% else %}
+                <span class="price">{{ tariff.price }}₽</span>
+                {% endif %}
+            </div>
+            <div class="tariff-duration">{{ tariff.days }} дн.</div>
+            
+            <ul class="tariff-features">
+                <li>✅ Безлимитный трафик</li>
+                <li>✅ Все серверы</li>
+                <li>✅ До {{ tariff.devices }} устройств</li>
+                {% if key == 'month' %}
+                <li>✅ Лучшая цена!</li>
+                {% endif %}
+                {% if key == 'year' %}
+                <li>✅ Приоритетная поддержка</li>
+                {% endif %}
+            </ul>
+            
+            <a href="{{ url_for('payment', tariff=key) }}" class="btn-tariff">
+                {% if tariff.price == 0 %}
+                Получить бесплатно
+                {% else %}
+                Выбрать тариф
+                {% endif %}
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="features-section">
+    <h2 class="section-title">Почему Lunary VPN?</h2>
+    <div class="features-grid">
+        <div class="feature-card glass-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Молниеносная скорость</h3>
+            <p>Современные протоколы VLESS обеспечивают максимальную скорость соединения</p>
+        </div>
+        <div class="feature-card glass-card">
+            <div class="feature-icon">🔒</div>
+            <h3>Полная анонимность</h3>
+            <p>Шифрование трафика. Никаких логов. Ваша приватность под защитой</p>
+        </div>
+        <div class="feature-card glass-card">
+            <div class="feature-icon">🌍</div>
+            <h3>Серверы по всему миру</h3>
+            <p>Доступ к контенту из любой точки мира. Обход блокировок</p>
+        </div>
+        <div class="feature-card glass-card">
+            <div class="feature-icon">📱</div>
+            <h3>Простая настройка</h3>
+            <p>Подключение за 1 минуту через приложение Happ</p>
+        </div>
+    </div>
+</section>
+
+<section class="referral-section">
+    <div class="glass-card referral-card">
+        <h2>👥 Реферальная программа</h2>
+        <p>Приглашайте друзей и получайте <strong>+3 дня</strong> VPN бесплатно за каждого!</p>
+        <a href="{{ url_for('register') }}" class="btn-glow">Присоединиться</a>
+    </div>
+</section>
+{% endblock %}

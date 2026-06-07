@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Lunary VPN{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
+</head>
+<body>
+    <canvas id="matrixCanvas"></canvas>
+    
+    <div class="glass-container">
+        <nav class="glass-nav">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Lunary VPN" class="logo-img">
+                <span class="logo-text">Lunary VPN</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('index') }}" class="glitch-text">Главная</a></li>
+                <li><a href="{{ url_for('about') }}">О проекте</a></li>
+                <li><a href="{{ url_for('faq') }}">FAQ</a></li>
+                <li><a href="{{ url_for('support') }}">Поддержка</a></li>
+                {% if session.user_id %}
+                    <li><a href="{{ url_for('dashboard') }}" class="btn-primary">Кабинет</a></li>
+                    {% if session.is_admin %}
+                        <li><a href="{{ url_for('admin_panel') }}" class="btn-admin">Админка</a></li>
+                    {% endif %}
+                    <li><a href="{{ url_for('logout') }}" class="btn-logout">Выход</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}" class="btn-login">Вход</a></li>
+                    <li><a href="{{ url_for('register') }}" class="btn-register">Регистрация</a></li>
+                {% endif %}
+            </ul>
+            <div class="burger">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+        </nav>
+
+        <main class="content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="flash-message {{ category }}">
+                                {{ message }}
+                                <span class="close-flash">&times;</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="glass-footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>🌙 Lunary VPN</h3>
+                    <p>Молниеносная скорость. Абсолютная конфиденциальность.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Быстрые ссылки</h4>
+                    <ul>
+                        <li><a href="{{ url_for('about') }}">О проекте</a></li>
+                        <li><a href="{{ url_for('faq') }}">FAQ</a></li>
+                        <li><a href="{{ url_for('support') }}">Поддержка</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Контакты</h4>
+                    <p>📱 <a href="https://t.me/LunaryVPN">Telegram</a></p>
+                    <p>💬 Поддержка 24/7</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Lunary VPN. Все права защищены.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/matrix.js') }}"></script>
+    <script>
+        // Flash messages auto-hide
+        document.addEventListener('DOMContentLoaded', function() {
+            const flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(msg => {
+                setTimeout(() => {
+                    msg.style.opacity = '0';
+                    setTimeout(() => msg.remove(), 300);
+                }, 5000);
+                
+                const closeBtn = msg.querySelector('.close-flash');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => {
+                        msg.style.opacity = '0';
+                        setTimeout(() => msg.remove(), 300);
+                    });
+                }
+            });
+            
+            // Mobile menu
+            const burger = document.querySelector('.burger');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (burger) {
+                burger.addEventListener('click', () => {
+                    navLinks.classList.toggle('nav-active');
+                    burger.classList.toggle('toggle');
+                });
+            }
+        });
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
